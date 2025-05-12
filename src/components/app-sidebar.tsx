@@ -9,21 +9,18 @@ import {
   IconFileAi,
   IconFileDescription,
   IconFileWord,
+  IconFolder,
   IconHelp,
-  IconInnerShadowTop,
+  IconListDetails,
   IconReport,
   IconSearch,
   IconSettings,
   IconUsers,
-  IconTicket,
-  IconCalendar,
-  IconShoppingCart,
-  IconCoffee,
-  IconLock,
 } from "@tabler/icons-react"
 
 import { NavDocuments } from "@/components/nav-documents"
 import { NavMain } from "@/components/nav-main"
+import { NavSecondary } from "@/components/nav-secondary"
 import { NavUser } from "@/components/nav-user"
 import {
   Sidebar,
@@ -37,55 +34,35 @@ import {
 
 const data = {
   user: {
-    name: "Radek Novák",
-    email: "novak@ddarena.com",
-    avatar: "https://images.blekota.com/download%20(17).jpeg",
+    name: "shadcn",
+    email: "m@example.com",
+    avatar: "/avatars/shadcn.jpg",
   },
   navMain: [
     {
-      title: "Přehled",
-      url: "/dashboard",
+      title: "Dashboard",
+      url: "#",
       icon: IconDashboard,
     },
     {
-      title: "Akce & Ticketing",
-      url: "/events",
-      icon: IconTicket,
+      title: "Lifecycle",
+      url: "#",
+      icon: IconListDetails,
     },
     {
-      title: "CRM",
-      url: "/crm",
-      icon: IconUsers,
-    },
-    {
-      title: "Rezervace",
-      url: "/reservations",
-      icon: IconCalendar,
-    },
-    {
-      title: "Maloobchod & Inventář",
-      url: "/inventory",
-      icon: IconShoppingCart,
-    },
-    {
-      title: "F&B / Gastro",
-      url: "/gastro",
-      icon: IconCoffee,
-    },
-    {
-      title: "Bezpečnost & Přístup",
-      url: "/security",
-      icon: IconLock,
-    },
-    {
-      title: "Analytika / Reporty",
-      url: "/analytics",
+      title: "Analytics",
+      url: "#",
       icon: IconChartBar,
     },
     {
-      title: "Nastavení",
-      url: "/settings",
-      icon: IconSettings,
+      title: "Projects",
+      url: "#",
+      icon: IconFolder,
+    },
+    {
+      title: "Team",
+      url: "#",
+      icon: IconUsers,
     },
   ],
   navClouds: [
@@ -138,34 +115,34 @@ const data = {
   ],
   navSecondary: [
     {
-      title: "Nastavení",
+      title: "Settings",
       url: "#",
       icon: IconSettings,
     },
     {
-      title: "Nápověda",
+      title: "Get Help",
       url: "#",
       icon: IconHelp,
     },
     {
-      title: "Hledat",
+      title: "Search",
       url: "#",
       icon: IconSearch,
     },
   ],
   documents: [
     {
-      name: "Datová knihovna",
+      name: "Data Library",
       url: "#",
       icon: IconDatabase,
     },
     {
-      name: "Reporty",
+      name: "Reports",
       url: "#",
       icon: IconReport,
     },
     {
-      name: "Ai Asistent",
+      name: "Word Assistant",
       url: "#",
       icon: IconFileWord,
     },
@@ -182,9 +159,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <div className="flex items-center gap-2">
-                <span className="text-base font-semibold">Administrace - DD</span>
-              </div>
+              <a href="#">
+                <span className="text-base font-semibold">Acme Inc.</span>
+              </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -192,6 +169,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavMain items={data.navMain} />
         <NavDocuments items={data.documents} />
+        <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

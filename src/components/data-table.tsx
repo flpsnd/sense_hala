@@ -26,13 +26,10 @@ import {
   IconChevronRight,
   IconChevronsLeft,
   IconChevronsRight,
-  IconCircleCheckFilled,
   IconDotsVertical,
   IconGripVertical,
   IconLayoutColumns,
-  IconLoader,
   IconPlus,
-  IconTrendingUp,
 } from "@tabler/icons-react"
 import {
   ColumnDef,
@@ -50,7 +47,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
-import { toast } from "sonner"
 import { z } from "zod"
 
 import { useIsMobile } from "@/hooks/use-mobile"
@@ -697,7 +693,7 @@ function TableCellViewer({ item }: { item: EventData }) {
               <div className="grid gap-2">
                 <div className="flex gap-2 leading-none font-medium">
                   Nárůst o 5.2 % tento měsíc{" "}
-                  <IconTrendingUp className="size-4" />
+                  <IconChevronRight className="size-4" />
                 </div>
                 <div className="text-muted-foreground">
                   Zobrazuje celkový počet návštěvníků za posledních 6 měsíců. Toto je pouze ukázkový text pro testování rozložení. Měl by se zalamovat na více řádků.
