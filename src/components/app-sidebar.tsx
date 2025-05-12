@@ -9,10 +9,8 @@ import {
   IconFileAi,
   IconFileDescription,
   IconFileWord,
-  IconFolder,
   IconHelp,
   IconInnerShadowTop,
-  IconListDetails,
   IconReport,
   IconSearch,
   IconSettings,
@@ -46,12 +44,12 @@ const data = {
   },
   navMain: [
     {
-      title: "Dashboard",
+      title: "Přehled",
       url: "/dashboard",
       icon: IconDashboard,
     },
     {
-      title: "Events & Ticketing",
+      title: "Akce & Ticketing",
       url: "/events",
       icon: IconTicket,
     },
@@ -61,12 +59,12 @@ const data = {
       icon: IconUsers,
     },
     {
-      title: "Reservations",
+      title: "Rezervace",
       url: "/reservations",
       icon: IconCalendar,
     },
     {
-      title: "Retail & Inventory",
+      title: "Maloobchod & Inventář",
       url: "/inventory",
       icon: IconShoppingCart,
     },
@@ -76,17 +74,17 @@ const data = {
       icon: IconCoffee,
     },
     {
-      title: "Security & Access",
+      title: "Bezpečnost & Přístup",
       url: "/security",
       icon: IconLock,
     },
     {
-      title: "Analytics / Reports",
+      title: "Analytika / Reporty",
       url: "/analytics",
       icon: IconChartBar,
     },
     {
-      title: "Settings",
+      title: "Nastavení",
       url: "/settings",
       icon: IconSettings,
     },
@@ -187,7 +185,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             >
               <a href="#">
                 <IconInnerShadowTop className="!size-5" />
-                <span className="text-base font-semibold">Acme Inc.</span>
+                <span className="text-base font-semibold">DD Arena</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
