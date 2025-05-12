@@ -38,9 +38,9 @@ import {
 
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+    name: "Radek Novák",
+    email: "novak@ddarena.com",
+    avatar: "https://images.blekota.com/download%20(17).jpeg",
   },
   navMain: [
     {
@@ -139,34 +139,34 @@ const data = {
   ],
   navSecondary: [
     {
-      title: "Settings",
+      title: "Nastavení",
       url: "#",
       icon: IconSettings,
     },
     {
-      title: "Get Help",
+      title: "Nápověda",
       url: "#",
       icon: IconHelp,
     },
     {
-      title: "Search",
+      title: "Hledat",
       url: "#",
       icon: IconSearch,
     },
   ],
   documents: [
     {
-      name: "Data Library",
+      name: "Datová knihovna",
       url: "#",
       icon: IconDatabase,
     },
     {
-      name: "Reports",
+      name: "Reporty",
       url: "#",
       icon: IconReport,
     },
     {
-      name: "Word Assistant",
+      name: "Asistent Wordu",
       url: "#",
       icon: IconFileWord,
     },

@@ -30,7 +30,7 @@ import {
   ToggleGroupItem,
 } from "@/components/ui/toggle-group"
 
-export const description = "An interactive area chart"
+export const description = "Interaktivní plošný graf"
 
 const chartData = [
   { date: "2024-04-01", desktop: 222, mobile: 150 },
@@ -128,14 +128,14 @@ const chartData = [
 
 const chartConfig = {
   visitors: {
-    label: "Visitors",
+    label: "Návštěvníci",
   },
   desktop: {
     label: "Desktop",
     color: "var(--primary)",
   },
   mobile: {
-    label: "Mobile",
+    label: "Mobil",
     color: "var(--primary)",
   },
 } satisfies ChartConfig
@@ -167,12 +167,12 @@ export function ChartAreaInteractive() {
   return (
     <Card className="@container/card">
       <CardHeader>
-        <CardTitle>Total Visitors</CardTitle>
+        <CardTitle>Celkový počet návštěvníků</CardTitle>
         <CardDescription>
           <span className="hidden @[540px]/card:block">
-            Total for the last 3 months
+            Celkem za poslední 3 měsíce
           </span>
-          <span className="@[540px]/card:hidden">Last 3 months</span>
+          <span className="@[540px]/card:hidden">Poslední 3 měsíce</span>
         </CardDescription>
         <CardAction>
           <ToggleGroup
@@ -182,9 +182,9 @@ export function ChartAreaInteractive() {
             variant="outline"
             className="hidden *:data-[slot=toggle-group-item]:!px-4 @[767px]/card:flex"
           >
-            <ToggleGroupItem value="90d">Last 3 months</ToggleGroupItem>
-            <ToggleGroupItem value="30d">Last 30 days</ToggleGroupItem>
-            <ToggleGroupItem value="7d">Last 7 days</ToggleGroupItem>
+            <ToggleGroupItem value="90d">Poslední 3 měsíce</ToggleGroupItem>
+            <ToggleGroupItem value="30d">Posledních 30 dní</ToggleGroupItem>
+            <ToggleGroupItem value="7d">Posledních 7 dní</ToggleGroupItem>
           </ToggleGroup>
           <Select value={timeRange} onValueChange={setTimeRange}>
             <SelectTrigger
@@ -192,17 +192,17 @@ export function ChartAreaInteractive() {
               size="sm"
               aria-label="Select a value"
             >
-              <SelectValue placeholder="Last 3 months" />
+              <SelectValue placeholder="Poslední 3 měsíce" />
             </SelectTrigger>
             <SelectContent className="rounded-xl">
               <SelectItem value="90d" className="rounded-lg">
-                Last 3 months
+                Poslední 3 měsíce
               </SelectItem>
               <SelectItem value="30d" className="rounded-lg">
-                Last 30 days
+                Posledních 30 dní
               </SelectItem>
               <SelectItem value="7d" className="rounded-lg">
-                Last 7 days
+                Posledních 7 dní
               </SelectItem>
             </SelectContent>
           </Select>
