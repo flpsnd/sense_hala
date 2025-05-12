@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+// Button import removed, no longer used
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 
