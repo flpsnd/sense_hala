@@ -12,6 +12,7 @@ import {
   IconHelp,
   IconReport,
   IconSearch,
+  IconSettings,
   IconUsers,
   IconTicket,
   IconCalendar,
@@ -21,6 +22,7 @@ import {
 } from "@tabler/icons-react"
 
 import { NavDocuments } from "@/components/nav-documents"
+import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
 import {
   Sidebar,
@@ -79,6 +81,11 @@ const data = {
       url: "/analytics",
       icon: IconChartBar,
     },
+    {
+      title: "Nastavení",
+      url: "/settings",
+      icon: IconSettings,
+    },
   ],
   navClouds: [
     {
@@ -132,7 +139,7 @@ const data = {
     {
       title: "Nastavení",
       url: "#",
-      icon: IconFileDescription,
+      icon: IconSettings,
     },
     {
       title: "Nápověda",
@@ -182,6 +189,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
+        <NavMain items={data.navMain} />
         <NavDocuments items={data.documents} />
       </SidebarContent>
       <SidebarFooter>
