@@ -110,11 +110,14 @@ export const schema = z.object({
   id: z.number(),
   header: z.string(),
   type: z.string(),
+  dateTime: z.string(),
   status: z.string(),
-  target: z.string(),
-  limit: z.string(),
-  reviewer: z.string(),
+  capacity: z.number(),
+  sold: z.number(),
+  manager: z.string(),
 })
+
+export type EventData = z.infer<typeof schema>
 
 // Create a separate component for the drag handle
 function DragHandle({ id }: { id: number }) {
@@ -136,7 +139,7 @@ function DragHandle({ id }: { id: number }) {
   )
 }
 
-const columns: ColumnDef<z.infer<typeof schema>>[] = [
+const columns: ColumnDef<EventData>[] = [
   {
     id: "drag",
     header: () => null,
@@ -170,7 +173,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
   },
   {
     accessorKey: "header",
-    header: "Název",
+    header: "Název akce",
     cell: ({ row }) => {
       return <TableCellViewer item={row.original} />
     },
@@ -178,7 +181,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
   },
   {
     accessorKey: "type",
-    header: "Typ sekce",
+    header: "Typ",
     cell: ({ row }) => (
       <div className="w-32">
         <Badge variant="outline" className="text-muted-foreground px-1.5">
@@ -188,102 +191,85 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     ),
   },
   {
-    accessorKey: "status",
-    header: "Stav",
-    cell: ({ row }) => (
-      <Badge variant="outline" className="text-muted-foreground px-1.5">
-        {row.original.status === "Done" ? (
-          <IconCircleCheckFilled className="fill-green-500 dark:fill-green-400" />
-        ) : (
-          <IconLoader />
-        )}
-        {row.original.status}
-      </Badge>
-    ),
-  },
-  {
-    accessorKey: "target",
-    header: "Cíl",
-    cell: ({ row }) => (
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          toast.promise(new Promise((resolve) => setTimeout(resolve, 1000)), {
-            loading: `Saving ${row.original.header}`,
-            success: "Done",
-            error: "Error",
-          })
-        }}
-      >
-        <Label htmlFor={`${row.original.id}-target`} className="sr-only">
-          Cíl
-        </Label>
-        <Input
-          className="hover:bg-input/30 focus-visible:bg-background dark:hover:bg-input/30 dark:focus-visible:bg-input/30 h-8 w-16 border-transparent bg-transparent text-right shadow-none focus-visible:border dark:bg-transparent"
-          defaultValue={row.original.target}
-          id={`${row.original.id}-target`}
-        />
-      </form>
-    ),
-  },
-  {
-    accessorKey: "limit",
-    header: "Limit",
-    cell: ({ row }) => (
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          toast.promise(new Promise((resolve) => setTimeout(resolve, 1000)), {
-            loading: `Saving ${row.original.header}`,
-            success: "Done",
-            error: "Error",
-          })
-        }}
-      >
-        <Label htmlFor={`${row.original.id}-limit`} className="sr-only">
-          Limit
-        </Label>
-        <Input
-          className="hover:bg-input/30 focus-visible:bg-background dark:hover:bg-input/30 dark:focus-visible:bg-input/30 h-8 w-16 border-transparent bg-transparent text-right shadow-none focus-visible:border dark:bg-transparent"
-          defaultValue={row.original.limit}
-          id={`${row.original.id}-limit`}
-        />
-      </form>
-    ),
-  },
-  {
-    accessorKey: "reviewer",
-    header: "Recenzent",
+    accessorKey: "dateTime",
+    header: "Datum & čas",
     cell: ({ row }) => {
-      const isAssigned = row.original.reviewer !== "Assign reviewer"
-
-      if (isAssigned) {
-        return row.original.reviewer
+      const date = new Date(row.original.dateTime)
+      const formattedDate = date.toLocaleDateString('cs-CZ', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+      })
+      const formattedTime = date.toLocaleTimeString('cs-CZ', {
+        hour: '2-digit',
+        minute: '2-digit',
+      })
+      return <div className="w-32">{`${formattedDate} ${formattedTime}`}</div>
+    },
+  },
+  {
+    accessorKey: "status",
+    header: "Stav prodeje",
+    cell: ({ row }) => {
+      let statusColor = ""
+      switch (row.original.status) {
+        case "V prodeji":
+          statusColor = "text-yellow-600 dark:text-yellow-400"
+          break
+        case "Vyprodáno":
+          statusColor = "text-red-600 dark:text-red-400"
+          break
+        case "Naplánováno":
+          statusColor = "text-blue-600 dark:text-blue-400"
+          break
+        default:
+          statusColor = "text-muted-foreground"
       }
-
       return (
-        <>
-          <Label htmlFor={`${row.original.id}-reviewer`} className="sr-only">
-            Recenzent
-          </Label>
-          <Select>
-            <SelectTrigger
-              className="w-38 **:data-[slot=select-value]:block **:data-[slot=select-value]:truncate"
-              size="sm"
-              id={`${row.original.id}-reviewer`}
-            >
-              <SelectValue placeholder="Přiřadit recenzenta" />
-            </SelectTrigger>
-            <SelectContent align="end">
-              <SelectItem value="Eddie Lake">Eddie Lake</SelectItem>
-              <SelectItem value="Jamik Tashpulatov">
-                Jamik Tashpulatov
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </>
+        <Badge variant="outline" className={`px-1.5 ${statusColor}`}>
+          {row.original.status}
+        </Badge>
       )
     },
+  },
+  {
+    accessorKey: "capacity",
+    header: "Kapacita",
+    cell: ({ row }) => (
+      <div className="w-20 text-right">{row.original.capacity.toLocaleString('cs-CZ')}</div>
+    ),
+  },
+  {
+    accessorKey: "sold",
+    header: "Prodáno",
+    cell: ({ row }) => (
+      <div className="w-20 text-right">{row.original.sold.toLocaleString('cs-CZ')}</div>
+    ),
+  },
+  {
+    id: "occupancy",
+    header: "Obsazenost %",
+    cell: ({ row }) => {
+      const capacity = row.original.capacity
+      const sold = row.original.sold
+      const occupancy = capacity > 0 ? ((sold / capacity) * 100).toFixed(1) : "N/A"
+      const percentage = capacity > 0 ? (sold / capacity) * 100 : 0
+      return (
+        <div className="w-28 flex flex-col items-end">
+          <div>{occupancy !== "N/A" ? `${occupancy.replace('.', ',')}%` : occupancy}</div>
+          <div className="w-full bg-gray-200 rounded-full h-1.5 dark:bg-gray-700 mt-1">
+            <div className="bg-blue-600 h-1.5 rounded-full" style={{ width: `${percentage}%` }}></div>
+          </div>
+        </div>
+      )
+    },
+  },
+  {
+    accessorKey: "manager",
+    header: "Správce",
+    cell: ({ row }) => (
+      <div className="w-32">{row.original.manager}</div>
+    ),
   },
   {
     id: "actions",
@@ -311,7 +297,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
   },
 ]
 
-function DraggableRow({ row }: { row: Row<z.infer<typeof schema>> }) {
+function DraggableRow({ row }: { row: Row<EventData> }) {
   const { transform, transition, setNodeRef, isDragging } = useSortable({
     id: row.original.id,
   })
@@ -339,7 +325,7 @@ function DraggableRow({ row }: { row: Row<z.infer<typeof schema>> }) {
 export function DataTable({
   data: initialData,
 }: {
-  data: z.infer<typeof schema>[]
+  data: EventData[]
 }) {
   const [data, setData] = React.useState(() => initialData)
   const [rowSelection, setRowSelection] = React.useState({})
@@ -440,8 +426,8 @@ export function DataTable({
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm">
                 <IconLayoutColumns />
-                <span className="hidden lg:inline">Customize Columns</span>
-                <span className="lg:hidden">Columns</span>
+                <span className="hidden lg:inline">Přizpůsobit sloupce</span>
+                <span className="lg:hidden">Sloupce</span>
                 <IconChevronDown />
               </Button>
             </DropdownMenuTrigger>
@@ -471,7 +457,7 @@ export function DataTable({
           </DropdownMenu>
           <Button variant="outline" size="sm">
             <IconPlus />
-            <span className="hidden lg:inline">Add Section</span>
+            <span className="hidden lg:inline">Přidat akci</span>
           </Button>
         </div>
       </div>
@@ -647,7 +633,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
+function TableCellViewer({ item }: { item: EventData }) {
   const isMobile = useIsMobile()
 
   return (
@@ -661,7 +647,7 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
         <DrawerHeader className="gap-1">
           <DrawerTitle>{item.header}</DrawerTitle>
           <DrawerDescription>
-            Zobrazuje celkový počet návštěvníků za posledních 6 měsíců
+            Detail akce a související informace
           </DrawerDescription>
         </DrawerHeader>
         <div className="flex flex-col gap-4 overflow-y-auto px-4 text-sm">
@@ -722,74 +708,46 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
           )}
           <form className="flex flex-col gap-4">
             <div className="flex flex-col gap-3">
-              <Label htmlFor="header">Header</Label>
+              <Label htmlFor="header">Název akce</Label>
               <Input id="header" defaultValue={item.header} />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-3">
-                <Label htmlFor="type">Type</Label>
-                <Select defaultValue={item.type}>
-                  <SelectTrigger id="type" className="w-full">
-                    <SelectValue placeholder="Select a type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Table of Contents">
-                      Table of Contents
-                    </SelectItem>
-                    <SelectItem value="Executive Summary">
-                      Executive Summary
-                    </SelectItem>
-                    <SelectItem value="Technical Approach">
-                      Technical Approach
-                    </SelectItem>
-                    <SelectItem value="Design">Design</SelectItem>
-                    <SelectItem value="Capabilities">Capabilities</SelectItem>
-                    <SelectItem value="Focus Documents">
-                      Focus Documents
-                    </SelectItem>
-                    <SelectItem value="Narrative">Narrative</SelectItem>
-                    <SelectItem value="Cover Page">Cover Page</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Label htmlFor="type">Typ</Label>
+                <Input id="type" defaultValue={item.type} />
               </div>
               <div className="flex flex-col gap-3">
-                <Label htmlFor="status">Status</Label>
+                <Label htmlFor="status">Stav prodeje</Label>
                 <Select defaultValue={item.status}>
                   <SelectTrigger id="status" className="w-full">
-                    <SelectValue placeholder="Select a status" />
+                    <SelectValue placeholder="Vyberte stav" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Done">Done</SelectItem>
-                    <SelectItem value="In Progress">In Progress</SelectItem>
-                    <SelectItem value="Not Started">Not Started</SelectItem>
+                    <SelectItem value="V prodeji">V prodeji</SelectItem>
+                    <SelectItem value="Vyprodáno">Vyprodáno</SelectItem>
+                    <SelectItem value="Naplánováno">Naplánováno</SelectItem>
+                    <SelectItem value="Zrušeno">Zrušeno</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-3">
-                <Label htmlFor="target">Target</Label>
-                <Input id="target" defaultValue={item.target} />
+                <Label htmlFor="capacity">Kapacita</Label>
+                <Input id="capacity" type="number" defaultValue={item.capacity} />
               </div>
               <div className="flex flex-col gap-3">
-                <Label htmlFor="limit">Limit</Label>
-                <Input id="limit" defaultValue={item.limit} />
+                <Label htmlFor="sold">Prodáno</Label>
+                <Input id="sold" type="number" defaultValue={item.sold} />
               </div>
             </div>
             <div className="flex flex-col gap-3">
-              <Label htmlFor="reviewer">Reviewer</Label>
-              <Select defaultValue={item.reviewer}>
-                <SelectTrigger id="reviewer" className="w-full">
-                  <SelectValue placeholder="Select a reviewer" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Eddie Lake">Eddie Lake</SelectItem>
-                  <SelectItem value="Jamik Tashpulatov">
-                    Jamik Tashpulatov
-                  </SelectItem>
-                  <SelectItem value="Emily Whalen">Emily Whalen</SelectItem>
-                </SelectContent>
-              </Select>
+              <Label htmlFor="dateTime">Datum & čas</Label>
+              <Input id="dateTime" type="datetime-local" defaultValue={item.dateTime.substring(0, 16)} />
+            </div>
+            <div className="flex flex-col gap-3">
+              <Label htmlFor="manager">Správce</Label>
+              <Input id="manager" defaultValue={item.manager} />
             </div>
           </form>
         </div>
@@ -803,3 +761,4 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
     </Drawer>
   )
 }
+
